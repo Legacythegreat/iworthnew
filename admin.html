@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Gallery Admin Dashboard - iWorth Technologies</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent: #4825e6;
+            --accent-light: #5f3cf3;
+            --text-main: #ffffff;
+            --text-muted: #8a99ad;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(72, 37, 230, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+        }
+
+        /* Header Styles */
+        header {
+            border-bottom: 1px solid var(--card-border);
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-row img {
+            height: 40px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            color: #25D366; /* Accent color matching site standard logo text */
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dashboard Container */
+        .dashboard-layout {
+            max-width: 1200px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards styling (Glassmorphism) */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(72, 37, 230, 0.25);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        select.form-control option {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* File Upload Area */
+        .file-dropzone {
+            border: 2px dashed var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.01);
+            position: relative;
+        }
+
+        .file-dropzone:hover, .file-dropzone.dragover {
+            border-color: var(--accent);
+            background: rgba(72, 37, 230, 0.05);
+        }
+
+        .file-dropzone i {
+            font-size: 2.5rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .file-dropzone:hover i {
+            color: var(--accent-light);
+        }
+
+        .file-dropzone p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .file-dropzone span {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .file-dropzone input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-preview {
+            display: none;
+            margin-top: 15px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            max-height: 180px;
+        }
+
+        .file-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-preview {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(239, 68, 68, 0.85);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .remove-preview:hover {
+            background: rgba(239, 68, 68, 1);
+        }
+
+        /* Buttons */
+        .btn-submit {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-light);
+            box-shadow: 0 8px 20px rgba(72, 37, 230, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Gallery Management Area */
+        .list-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 576px) {
+            .list-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-wrapper input {
+            padding-left: 42px;
+        }
+
+        .filter-select {
+            width: 180px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 576px) {
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        /* Image List Grid */
+        .images-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .images-list-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .images-list-grid::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .images-list-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .image-admin-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-admin-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .img-container {
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+            background: #151b26;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .image-admin-card:hover .img-container img {
+            transform: scale(1.05);
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 30px;
+            text-transform: capitalize;
+            font-weight: 500;
+        }
+
+        .card-details {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-details h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text-main);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .card-details .no-caption {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .card-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .date-uploaded {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Loading / Empty States */
+        .loading-state, .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .loading-state i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+            color: var(--accent);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 15px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: rgba(11, 15, 25, 0.95);
+            border-left: 4px solid var(--accent);
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            padding: 15px 20px;
+            border-radius: 6px;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--card-border);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-row">
+                <img src="iworth-tech.png" alt="iWorth Technologies">
+                <div class="logo-text">iWorth <span>Dashboard</span></div>
+            </div>
+            <a href="gallery.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Back to Gallery
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="dashboard-layout">
+        
+        <!-- Left Side: Upload Image Form -->
+        <section class="glass-card">
+            <h2 class="card-title">
+                <i class="fas fa-cloud-upload-alt"></i> Upload New Image
+            </h2>
+            
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Image File</label>
+                    <div class="file-dropzone" id="dropzone">
+                        <i class="fas fa-image"></i>
+                        <p>Drag & drop image here or click to browse</p>
+                        <span>Supports JPG, JPEG, PNG, WEBP, AVIF</span>
+                        <input type="file" id="imageInput" name="image" accept="image/*" required>
+                    </div>
+                    
+                    <div class="file-preview" id="filePreview">
+                        <img id="previewImg" src="" alt="Preview">
+                        <button type="button" class="remove-preview" id="removePreview" title="Remove image">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryInput">Category</label>
+                    <select class="form-control" id="categoryInput" name="category" required>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="education">Education</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="av">AV Solutions</option>
+                        <option value="networking">Networking</option>
+                        <option value="solar">Solar Installations</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="captionInput">Caption (Optional)</label>
+                    <input type="text" class="form-control" id="captionInput" name="caption" placeholder="Enter image description/caption">
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Upload to Database
+                </button>
+            </form>
+        </section>
+
+        <!-- Right Side: Gallery Manager -->
+        <section class="glass-card">
+            <h2 class="card-title">
+                <i class="fas fa-images"></i> Manage Gallery Images
+            </h2>
+
+            <!-- Filtering & Search -->
+            <div class="list-controls">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" id="searchBar" placeholder="Search by caption...">
+                </div>
+                <select class="form-control filter-select" id="filterCategory">
+                    <option value="all">All Categories</option>
+                    <option value="education">Education</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="av">AV Solutions</option>
+                    <option value="networking">Networking</option>
+                    <option value="solar">Solar Installations</option>
+                </select>
+            </div>
+
+            <!-- List Grid -->
+            <div class="images-list-grid" id="imagesContainer">
+                <div class="loading-state">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading database gallery...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 iWorth Technologies. Administrative Control Panel. SQLite Driven.</p>
+    </footer>
+
+    <script>
+        const API_URL = '/api/images';
+        
+        let allImages = [];
+        
+        // DOM Elements
+        const dropzone = document.getElementById('dropzone');
+        const imageInput = document.getElementById('imageInput');
+        const filePreview = document.getElementById('filePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removePreview = document.getElementById('removePreview');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const imagesContainer = document.getElementById('imagesContainer');
+        const searchBar = document.getElementById('searchBar');
+        const filterCategory = document.getElementById('filterCategory');
+        const toastContainer = document.getElementById('toastContainer');
+
+        // Page Init
+        document.addEventListener('DOMContentLoaded', fetchImages);
+
+        // Toast Messages
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            toast.innerHTML = `
+                <i class="fas ${icon}" style="color: ${type === 'success' ? 'var(--success)' : 'var(--danger)'}"></i>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 50);
+            
+            // Remove after 3.5s
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // File Selection & Preview
+        imageInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop behaviors
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) {
+                imageInput.files = files;
+                handleFileSelect();
+            }
+        });
+
+        function handleFileSelect() {
+            const file = imageInput.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    showToast('Please select a valid image file.', 'error');
+                    clearFileSelection();
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    dropzone.style.display = 'none';
+                    filePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        removePreview.addEventListener('click', clearFileSelection);
+
+        function clearFileSelection() {
+            imageInput.value = '';
+            previewImg.src = '';
+            filePreview.style.display = 'none';
+            dropzone.style.display = 'block';
+        }
+
+        // Form Submit
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const file = imageInput.files[0];
+            const category = document.getElementById('categoryInput').value;
+            const caption = document.getElementById('captionInput').value;
+
+            if (!file || !category) {
+                showToast('Image and Category are required fields.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('category', category);
+            formData.append('caption', caption);
+
+            // Disable submit button & loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to Database...';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Image uploaded successfully!');
+                    uploadForm.reset();
+                    clearFileSelection();
+                    fetchImages(); // Refresh listings
+                } else {
+                    showToast(data.error || 'Failed to upload image.', 'error');
+                }
+            } catch (err) {
+                showToast('Server connection failed.', 'error');
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Upload to Database';
+            }
+        });
+
+        // Fetch Images from DB
+        async function fetchImages() {
+            try {
+                const response = await fetch(API_URL);
+                if (response.ok) {
+                    allImages = await response.json();
+                    renderImages();
+                } else {
+                    imagesContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Failed to retrieve gallery database records.</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                imagesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-wifi"></i>
+                        <p>Server connection offline. Run server.js to use the database.</p>
+                    </div>
+                `;
+                console.error(err);
+            }
+        }
+
+        // Render Images List
+        function renderImages() {
+            const query = searchBar.value.toLowerCase().trim();
+            const categoryFilter = filterCategory.value;
+            
+            const filtered = allImages.filter(img => {
+                const matchQuery = !query || (img.caption && img.caption.toLowerCase().includes(query)) || img.filename.toLowerCase().includes(query);
+                const matchCategory = categoryFilter === 'all' || img.category === categoryFilter;
+                return matchQuery && matchCategory;
+            });
+
+            if (filtered.length === 0) {
+                imagesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>No matching database images found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            imagesContainer.innerHTML = filtered.map(img => {
+                const dateStr = img.created_at ? new Date(img.created_at).toLocaleDateString() : 'Preserved';
+                const displayCaption = img.caption ? img.caption : '<span class="no-caption">No Caption</span>';
+                
+                return `
+                    <div class="image-admin-card" id="img-card-${img.id}">
+                        <div class="img-container">
+                            <span class="category-badge">${img.category}</span>
+                            <img src="${img.filepath}" alt="${img.caption || img.filename}" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop&q=60'">
+                        </div>
+                        <div class="card-details">
+                            <h4>${displayCaption}</h4>
+                            <div class="card-action">
+                                <span class="date-uploaded"><i class="fas fa-calendar-alt"></i> ${dateStr}</span>
+                                <button type="button" class="btn-delete" onclick="deleteImage(${img.id})" title="Delete image">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Search and Filter Events
+        searchBar.addEventListener('input', renderImages);
+        filterCategory.addEventListener('change', renderImages);
+
+        // Delete Image
+        async function deleteImage(id) {
+            if (!confirm('Are you sure you want to delete this image? This will remove it from the database and the server.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Image deleted successfully!');
+                    
+                    // Animate card removal
+                    const card = document.getElementById(`img-card-${id}`);
+                    if (card) {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            allImages = allImages.filter(img => img.id !== id);
+                            renderImages();
+                        }, 300);
+                    } else {
+                        fetchImages();
+                    }
+                } else {
+                    showToast(data.error || 'Failed to delete image.', 'error');
+                }
+            } catch (err) {
+                showToast('Server connection failed.', 'error');
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
